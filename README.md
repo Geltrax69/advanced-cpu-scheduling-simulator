@@ -1,8 +1,19 @@
-# ⚙️ Advanced CPU Scheduling Simulator
+<!-- Banner -->
+<p align="center">
+  <img src="https://yourdomain.com/banner.png" width="100%" alt="Advanced CPU Scheduling Simulator" />
+</p>
 
-A fully-featured, interactive CPU Scheduling Simulator built with modern web technologies including *Vite*, **React**, **TypeScript**, **Tailwind CSS**, and **shadcn/ui**. This tool is designed for Computer Science students, educators, and professionals to simulate and visualize various CPU scheduling algorithms in real-time or step-by-step modes, along with comprehensive performance metrics.
+<h1 align="center">⚙️ Advanced CPU Scheduling Simulator</h1>
+
+<p align="center">
+  <b>Visualize & compare CPU Scheduling algorithms in real-time</b><br />  
+</p>
+
 
 ---
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com/?lines=Real-time+CPU+Scheduling+Simulator;Step-by-Step+Visualization;Built+with+React,+TypeScript+&+Tailwind&center=true&width=440&height=50" />
+</p>
 
 ## 🚀 Tech Stack
 
@@ -11,8 +22,14 @@ A fully-featured, interactive CPU Scheduling Simulator built with modern web tec
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **UI Components**: [shadcn/ui](https://ui.shadcn.com/)
 - **Language**: TypeScript
+  
+ ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite)
 
 ---
+
 
 ## 🎯 Key Features
 
@@ -71,6 +88,15 @@ A fully-featured, interactive CPU Scheduling Simulator built with modern web tec
 
 ![image](https://github.com/user-attachments/assets/add6c531-34ca-41c1-abcf-469c9e17f31c)
 
+## 🎥 Live Demo
+
+<p align="center">
+  <img src="https://yourdomain.com/demo.gif" width="90%" alt="Live demo of CPU scheduling simulator"/>
+</p>
+
+<p align="center">
+  <i>⚙️ Watch algorithms execute in real-time with step-by-step visualizations!</i>
+</p>
 
 
 ## 🛠 Installation & Setup
@@ -80,10 +106,35 @@ A fully-featured, interactive CPU Scheduling Simulator built with modern web tec
    git clone https://github.com/your-username/advanced-cpu-scheduling-simulator.git
    cd advanced-cpu-scheduling-simulator
 
-## Contributors
-- Saurabh
-- Manohar
-- Lalit Singh
+## 👥 Contributors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/saurabh2728">
+        <img src="https://github.com/saurabh2728.png" width="100px;" alt="Saurabh"/><br />
+        <sub><b>Saurabh</b></sub>
+      </a><br />
+      <i></i>
+    </td>
+    <td align="center">
+      <a href="https://github.com/ManoharKonala">
+        <img src="https://github.com/ManoharKonala.png" width="100px;" alt="Manohar"/><br />
+        <sub><b>Manohar</b></sub>
+      </a><br />
+      <i></i>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Geltrax69">
+        <img src="https://github.com/Geltrax69.png" width="100px;" alt="Lalit Singh"/><br />
+        <sub><b>Lalit Singh</b></sub>
+      </a><br />
+      <i></i>
+    </td>
+  </tr>
+</table>
+
+
 
 ## 📜 License
 
