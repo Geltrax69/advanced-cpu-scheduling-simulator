@@ -1,12 +1,12 @@
 
 import React, { useState } from "react";
-import { Process, SchedulerResult, runScheduler, compareAlgorithms } from "@/lib/schedulers";
+import { Process, SchedulerResult } from "@/lib/schedulers";
 import ProcessForm from "@/components/ProcessForm";
 import SchedulerConfig, { SimulationMode, SchedulerAlgorithm } from "@/components/SchedulerConfig";
 import ResultsDisplay from "@/components/ResultsDisplay";
 import StepByStepSimulation from "@/components/StepByStepSimulation";
 import WelcomeGuide from "@/components/WelcomeGuide";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { compareAlgorithmsApi, runSchedulerApi } from "@/lib/schedulerApi";
 
 const Index = () => {
   // Process state
@@ -24,26 +24,31 @@ const Index = () => {
   const [compareResults, setCompareResults] = useState<Record<string, SchedulerResult> | null>(null);
   const [isSimulationRun, setIsSimulationRun] = useState(false);
   
-  const runSimulation = () => {
+  const runSimulation = async () => {
     if (processes.length === 0) return;
-    
-    if (simulationMode === "comparison") {
-      const compResults = compareAlgorithms(processes, contextSwitchTime, timeQuantum);
-      setCompareResults(compResults);
-      setResults(null);
-    } else {
-      const simulationResults = runScheduler(
-        algorithm, 
-        processes, 
-        isPreemptive, 
-        contextSwitchTime, 
-        timeQuantum
-      );
-      setResults(simulationResults);
-      setCompareResults(null);
+
+    try {
+      if (simulationMode === "comparison") {
+        const compResults = await compareAlgorithmsApi(processes, contextSwitchTime, timeQuantum);
+        setCompareResults(compResults);
+        setResults(null);
+      } else {
+        const simulationResults = await runSchedulerApi(
+          algorithm,
+          processes,
+          isPreemptive,
+          contextSwitchTime,
+          timeQuantum
+        );
+        setResults(simulationResults);
+        setCompareResults(null);
+      }
+
+      setIsSimulationRun(true);
+    } catch (error) {
+      console.error("Failed to run simulation:", error);
+      window.alert("Failed to run simulation. Make sure backend server is running on port 3001.");
     }
-    
-    setIsSimulationRun(true);
   };
   
   const resetSimulation = () => {

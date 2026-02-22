@@ -4,8 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "sh -c 'BACK_PID=\"\"; if ! lsof -i :3001 -sTCP:LISTEN >/dev/null 2>&1; then node backend/server.mjs & BACK_PID=$!; else echo \"Backend already running on port 3001, reusing it.\"; fi; trap \"[ -n \\\"$BACK_PID\\\" ] && kill $BACK_PID 2>/dev/null\" EXIT; vite'",
+    "dev:frontend": "vite",
+    "dev:backend": "node backend/server.mjs",
     "build": "vite build",
+    "build:backend": "clang++ -std=c++17 -O2 backend/cpp/*.cpp backend/cpp/algorithms/*.cpp -o backend/scheduler_engine",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
