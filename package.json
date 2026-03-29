@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "sh -c 'BACK_PID=\"\"; if ! lsof -i :3001 -sTCP:LISTEN >/dev/null 2>&1; then node backend/server.mjs & BACK_PID=$!; else echo \"Backend already running on port 3001, reusing it.\"; fi; trap \"[ -n \\\"$BACK_PID\\\" ] && kill $BACK_PID 2>/dev/null\" EXIT; vite'",
+    "dev": "sh -c 'BACK_PID=\"\"; if ! lsof -i :3001 -sTCP:LISTEN >/dev/null 2>&1; then npm run build:backend || exit 1; node backend/server.mjs & BACK_PID=$!; until curl -sf http://localhost:3001/api/health >/dev/null 2>&1; do sleep 0.2; done; else echo \"Backend already running on port 3001, reusing it.\"; fi; trap \"[ -n \\\"$BACK_PID\\\" ] && kill $BACK_PID 2>/dev/null\" EXIT; vite'",
     "dev:frontend": "vite",
     "dev:backend": "node backend/server.mjs",
     "build": "vite build",

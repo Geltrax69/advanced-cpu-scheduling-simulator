@@ -16,6 +16,19 @@ double safeDivide(double a, double b) {
   if (b == 0) return 0;
   return a / b;
 }
+
+void enqueueArrivals(
+    const std::vector<Process>& pool,
+    std::deque<int>& readyQueue,
+    size_t& nextArrivalIdx,
+    int currentTime) {
+  while (nextArrivalIdx < pool.size() && pool[nextArrivalIdx].arrivalTime <= currentTime) {
+    if (pool[nextArrivalIdx].remainingTime > 0) {
+      readyQueue.push_back(static_cast<int>(nextArrivalIdx));
+    }
+    ++nextArrivalIdx;
+  }
+}
 }  // namespace
 
 SchedulerResult roundRobin(const std::vector<Process>& processes, int timeQuantum, int contextSwitchTime) {
@@ -36,6 +49,7 @@ SchedulerResult roundRobin(const std::vector<Process>& processes, int timeQuantu
   });
 
   int currentTime = pool[0].arrivalTime;
+  size_t nextArrivalIdx = 0;
   int completed = 0;
   double totalWaitingTime = 0;
   double totalTurnaroundTime = 0;
@@ -43,30 +57,15 @@ SchedulerResult roundRobin(const std::vector<Process>& processes, int timeQuantu
   double totalBurstTime = 0;
 
   std::deque<int> readyQueue;
-  for (size_t i = 0; i < pool.size(); ++i) {
-    if (pool[i].arrivalTime <= currentTime && pool[i].remainingTime > 0) {
-      readyQueue.push_back(static_cast<int>(i));
-    }
-  }
+  enqueueArrivals(pool, readyQueue, nextArrivalIdx, currentTime);
 
   int prevMetricIdx = -1;
 
   while (completed < static_cast<int>(processes.size())) {
     if (readyQueue.empty()) {
-      int nextArrival = std::numeric_limits<int>::max();
-      for (const auto& p : pool) {
-        if (p.arrivalTime > currentTime && p.remainingTime > 0) {
-          nextArrival = std::min(nextArrival, p.arrivalTime);
-        }
-      }
-      if (nextArrival == std::numeric_limits<int>::max()) break;
-      currentTime = nextArrival;
-
-      for (size_t i = 0; i < pool.size(); ++i) {
-        if (pool[i].arrivalTime <= currentTime && pool[i].remainingTime > 0) {
-          readyQueue.push_back(static_cast<int>(i));
-        }
-      }
+      if (nextArrivalIdx >= pool.size()) break;
+      currentTime = std::max(currentTime, pool[nextArrivalIdx].arrivalTime);
+      enqueueArrivals(pool, readyQueue, nextArrivalIdx, currentTime);
     }
 
     int queueIdx = readyQueue.front();
@@ -77,6 +76,7 @@ SchedulerResult roundRobin(const std::vector<Process>& processes, int timeQuantu
 
     if (prevMetricIdx != -1 && prevMetricIdx != metricIdx) {
       currentTime += contextSwitchTime;
+      enqueueArrivals(pool, readyQueue, nextArrivalIdx, currentTime);
     }
 
     Process& m = metrics[metricIdx];
@@ -90,16 +90,10 @@ SchedulerResult roundRobin(const std::vector<Process>& processes, int timeQuantu
 
     result.ganttChart.push_back({current.id, currentTime, currentTime + execTime, current.color});
 
-    int prevTime = currentTime;
     currentTime += execTime;
     current.remainingTime -= execTime;
     m.remainingTime -= execTime;
-
-    for (size_t i = 0; i < pool.size(); ++i) {
-      if (pool[i].arrivalTime > prevTime && pool[i].arrivalTime <= currentTime && pool[i].remainingTime > 0) {
-        readyQueue.push_back(static_cast<int>(i));
-      }
-    }
+    enqueueArrivals(pool, readyQueue, nextArrivalIdx, currentTime);
 
     if (current.remainingTime == 0) {
       completed++;

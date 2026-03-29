@@ -11,7 +11,7 @@ double safeDivide(double a, double b) {
 
 SchedulerResult fcfs(const std::vector<Process>& processes, int contextSwitchTime) {
   std::vector<Process> sortedProcesses = processes;
-  std::sort(sortedProcesses.begin(), sortedProcesses.end(), [](const Process& a, const Process& b) {
+  std::stable_sort(sortedProcesses.begin(), sortedProcesses.end(), [](const Process& a, const Process& b) {
     return a.arrivalTime < b.arrivalTime;
   });
 

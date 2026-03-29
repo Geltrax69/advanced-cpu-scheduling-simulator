@@ -47,7 +47,9 @@ const Index = () => {
       setIsSimulationRun(true);
     } catch (error) {
       console.error("Failed to run simulation:", error);
-      window.alert("Failed to run simulation. Make sure backend server is running on port 3001.");
+      const message =
+        error instanceof Error ? error.message : "The backend may still be starting up.";
+      window.alert(`Failed to run simulation: ${message}`);
     }
   };
   

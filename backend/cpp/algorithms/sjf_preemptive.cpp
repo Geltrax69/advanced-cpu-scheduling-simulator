@@ -11,6 +11,20 @@ int findMetricIndex(const std::vector<Process>& metrics, const std::string& id) 
   return -1;
 }
 
+int selectShortestJob(const std::vector<Process>& pool, int currentTime) {
+  int selectedIdx = -1;
+  int shortest = std::numeric_limits<int>::max();
+
+  for (size_t i = 0; i < pool.size(); ++i) {
+    if (pool[i].arrivalTime <= currentTime && pool[i].remainingTime > 0 && pool[i].remainingTime < shortest) {
+      shortest = pool[i].remainingTime;
+      selectedIdx = static_cast<int>(i);
+    }
+  }
+
+  return selectedIdx;
+}
+
 double safeDivide(double a, double b) {
   if (b == 0) return 0;
   return a / b;
@@ -36,15 +50,7 @@ SchedulerResult sjfPreemptive(const std::vector<Process>& processes, int context
   double totalBurstTime = 0;
 
   while (completed < static_cast<int>(processes.size())) {
-    int selectedIdx = -1;
-    int shortest = std::numeric_limits<int>::max();
-
-    for (size_t i = 0; i < pool.size(); ++i) {
-      if (pool[i].arrivalTime <= currentTime && pool[i].remainingTime > 0 && pool[i].remainingTime < shortest) {
-        shortest = pool[i].remainingTime;
-        selectedIdx = static_cast<int>(i);
-      }
-    }
+    int selectedIdx = selectShortestJob(pool, currentTime);
 
     if (selectedIdx == -1) {
       currentTime++;
@@ -52,7 +58,18 @@ SchedulerResult sjfPreemptive(const std::vector<Process>& processes, int context
     }
 
     if (prevIdx != -1 && prevIdx != selectedIdx) {
-      currentTime += contextSwitchTime;
+      int reevaluatedIdx = selectShortestJob(pool, currentTime + contextSwitchTime);
+      if (reevaluatedIdx != prevIdx) {
+        currentTime += contextSwitchTime;
+        selectedIdx = reevaluatedIdx;
+      } else {
+        selectedIdx = prevIdx;
+      }
+    }
+
+    if (selectedIdx == -1) {
+      currentTime++;
+      continue;
     }
 
     Process& selected = pool[selectedIdx];
